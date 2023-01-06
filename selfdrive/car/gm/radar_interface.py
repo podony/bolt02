@@ -3,7 +3,8 @@ import math
 from cereal import car
 from common.conversions import Conversions as CV
 from opendbc.can.parser import CANParser
-from selfdrive.car.gm.values import DBC, CAR, CanBus
+##from selfdrive.car.gm.values import DBC, CAR, CanBus
+from selfdrive.car.gm.values import DBC, CanBus
 from selfdrive.car.interfaces import RadarInterfaceBase
 
 RADAR_HEADER_MSG = 1120
@@ -16,8 +17,8 @@ LAST_RADAR_MSG = RADAR_HEADER_MSG + NUM_SLOTS
 
 
 def create_radar_can_parser(car_fingerprint):
-  if car_fingerprint not in (CAR.VOLT, CAR.MALIBU, CAR.HOLDEN_ASTRA, CAR.ACADIA, CAR.CADILLAC_ATS, CAR.ESCALADE_ESV):
-    return None
+##  if car_fingerprint not in (CAR.VOLT, CAR.MALIBU, CAR.HOLDEN_ASTRA, CAR.ACADIA, CAR.CADILLAC_ATS, CAR.ESCALADE_ESV):
+##    return None
 
   # C1A-ARS3-A by Continental
   radar_targets = list(range(SLOT_1_MSG, SLOT_1_MSG + NUM_SLOTS))
@@ -38,8 +39,8 @@ class RadarInterface(RadarInterfaceBase):
   def __init__(self, CP):
     super().__init__(CP)
 
-    self.rcp = create_radar_can_parser(CP.carFingerprint)
-
+    ## self.rcp = create_radar_can_parser(CP.carFingerprint)
+    self.rcp = None if CP.radarOffCan else create_radar_can_parser(CP.carFingerprint)
     self.trigger_msg = LAST_RADAR_MSG
     self.updated_messages = set()
     self.radar_ts = CP.radarTimeStep
